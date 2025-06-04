@@ -26,39 +26,38 @@ void displaySeats(const vector<vector<char>>& seats, int rows, int seat) {
 }
 
 int main() {
-    int rows, seats;
+    int rows, columns;
 
     cout << "How many seats per row:";
-    cin >> seats;
+    cin >> columns;
 
     cout << "How many rows:";
     cin >> rows;
 
-    vector<vector<char>> seating = createSeatingArrangement(rows, seats);
+    vector<vector<char>> seating = createSeatingArrangement(rows, columns);
     string seatOrder;
 
     char flag = 'Y';
     while (flag == 'Y' || flag == 'y') {
-        displaySeats(seating, rows, seats);
+        displaySeats(seating, rows, columns);
 
-        int totalSeats = rows * seats;
-        int seatStatus = 0;
+        int totalSeats = rows * columns;
+        int bookedSeats = 0;
 
         for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < seats; j++) {
+            for (int j = 0; j < columns; j++) {
                 if (seating[i][j] == 'X') {
-                    seatStatus++;
+                    bookedSeats++;
                 }
             }
         }
 
-
-        if (seatStatus >= totalSeats) {
+        if (bookedSeats >= totalSeats) {
             cout << "Event is booked! No more available seats." << endl;
             break; 
         }
 
-        cout << " The amount of seats left is:" << rows * seats - seatStatus << endl;
+        cout << " The amount of seats left is:" << totalSeats - bookedSeats << endl;
 
         try {
             int row;
@@ -76,16 +75,16 @@ int main() {
 
             seat = toupper(seat);
 
-            int seatint = seat - 'A';
+            int seatIndex = seat - 'A';
 
-            if (seatint < 0 || seatint > seats) {
+            if (seatIndex < 0 || seatIndex >= columns) {
                 throw runtime_error("seat is outside of the range");
             }
 
-            if (seating[row - 1][seatint] == 'X') {
+            if (seating[row - 1][seatIndex] == 'X') {
                 cout << "You have already booked this seat" << endl;
             } else {
-                seating[row - 1][seatint] = 'X';
+                seating[row - 1][seatIndex] = 'X';
                 seatOrder += to_string(row) + string(1, seat) + " ,";
             }
         } catch (const runtime_error& e) {
@@ -103,4 +102,3 @@ int main() {
 
     return 0;
 }
-
